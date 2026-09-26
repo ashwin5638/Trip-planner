@@ -1,6 +1,6 @@
 import express from 'express'
 import 'dotenv/config'
-import { planTrip, LlmError } from './llm.js'
+import { planTrip } from './llm.js'
 const app = express()
 
 app.use(express.json())
@@ -16,14 +16,8 @@ app.post('/api/plan-trip', async (req, res) => {
     const trip = await planTrip(prompt)
     return res.json({ trip })
   } catch (err) {
-    console.error('Error occurred while planning trip:', err)
-    const message = err?.message || 'An error occurred while planning the trip.'
-    const status = err instanceof LlmError ? err.status : 500
-    return res.status(status).json({
-      error: message,
-      message,
-      code: err?.code || 'UNKNOWN',
-    })
+    console.error('Could not plan trip:', err.message)
+    return res.status(500).json({ error: err.message })
   }
 })
 

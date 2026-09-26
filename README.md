@@ -8,7 +8,7 @@ React + Vite on the front end, Express on the back end, and OpenRouter (free mod
 
 1. The browser POSTs your prompt to `/api/plan-trip`.
 2. `server/llm.js` calls OpenRouter's OpenAI-compatible `/api/v1/chat/completions` endpoint, asking for a JSON object matching `shared/tripSchema.js`.
-3. The response is validated with zod. If the model returns malformed JSON, one repair round-trip is attempted.
+3. The response is validated with zod against `shared/tripSchema.js`. If the model returns malformed JSON, the request fails with a friendly error.
 4. The validated object is sent back and rendered by `src/components/TripResult.jsx`.
 
 ## Setup
@@ -35,10 +35,9 @@ The Vite dev server runs on `http://localhost:5173` and proxies `/api` to the Ex
 | `OPENROUTER_MODEL` | `openrouter/free` | Primary model. `openrouter/free` is a router that picks a free model supporting the parameters you send. |
 | `OPENROUTER_FALLBACK_MODELS` | `qwen/qwen3.8-27b:free,google/gemma-4-31b-it:free,nvidia/nemotron-3-super-120b-a12b:free` | Comma-separated fallbacks tried when the primary model has no available provider. |
 | `LLM_TIMEOUT_MS` | `120000` | Per-request timeout. Free models are slow; raise this for long itineraries. |
-| `LLM_MAX_TOKENS` | `8192` | Response cap. A 10-day itinerary with descriptions needs roughly 4k tokens. |
 | `PORT` | `5000` | Express port. |
 
-Any model id from the [OpenRouter catalog](https://openrouter.ai/models) can be used in `OPENROUTER_MODEL`. Free models have a `:free` suffix.
+Any model id from the [OpenRouter catalog](https://openrouter.ai/models) can be used in `OPENROUTER_MODEL`. Free models have a `:free` suffix. Currency defaults to INR — see `shared/currency.js`.
 
 ## Free-tier limits
 
@@ -49,7 +48,7 @@ Free models (`*:free`) are rate limited, and extra keys or accounts do not raise
 
 Check your remaining quota with `GET https://openrouter.ai/api/v1/key`. If you hit the daily cap, use a paid model id or wait for the UTC day to roll over.
 
-Because of this, `server/llm.js` retries twice with exponential backoff on rate limits and 5xx errors, honors the `Retry-After` header, and rotates to fallback models.
+If a request fails on a rate limit or a provider outage, `server/llm.js` reports the upstream message straight back so you can see what happened. There is no automatic retry — click the button again to retry.
 
 ## Scripts
 
