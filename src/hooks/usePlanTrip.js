@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { planTrip } from '../api/planTrip.js'
+import planTrip from "../api/planTrip.js";
 
 export const STATUS = {
   IDLE: 'idle',
