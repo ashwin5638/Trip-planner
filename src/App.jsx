@@ -5,7 +5,16 @@ import TripResult from './components/TripResult.jsx'
 import Error from './components/Error.jsx'
 
 function App() {
-  const { status, trip, error, run, reset } = usePlanTrip()
+  const { status, trip, partial, error, run, reset, cancel } = usePlanTrip()
+  const streaming = status === STATUS.LOADING
+
+  const done = partial?.days.length ?? 0
+  const total = partial?.durationDays ?? 0
+  const progress = done === 0
+    ? 'Planning your trip…'
+    : total > 0
+      ? `Day ${done} of ${total} planned`
+      : `Day ${done} planned`
 
   return (
     <div className="app">
@@ -15,11 +24,21 @@ function App() {
       </header>
 
       <main className="app-main">
-        <TripForm onSubmit={run} busy={status === STATUS.LOADING} />
+        <TripForm onSubmit={run} busy={streaming} />
 
         {status === STATUS.IDLE && <p className="empty-state">Describe a trip to get a day-by-day plan.</p>}
 
-        {status === STATUS.LOADING && <p className="loading-hint">Planning your trip...</p>}
+        {streaming && (
+          <>
+            <TripResult trip={partial} streaming />
+            <div className="planning-bar">
+              <p className="loading-hint">{progress}</p>
+              <button type="button" className="cancel-btn" onClick={cancel}>
+                Cancel
+              </button>
+            </div>
+          </>
+        )}
 
         {status === STATUS.ERROR && <Error message={error?.message} />}
 

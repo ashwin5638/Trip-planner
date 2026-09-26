@@ -282,6 +282,34 @@ button {
   color: var(--muted);
 }
 
+.muted-value {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.planning-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.cancel-btn {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 13px;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.cancel-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .day-nav {
   display: flex;
   flex-wrap: wrap;

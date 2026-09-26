@@ -1,4 +1,5 @@
-import { planTrip } from '../server/llm.js'
+import { streamTrip } from '../server/llm.js'
+import { sseHeaders, toSseStream } from '../server/sse.js'
 
 export default async function handler(request) {
   if (request.method !== 'POST') {
@@ -16,9 +17,11 @@ export default async function handler(request) {
     return Response.json({ error: 'Prompt is required.' }, { status: 400 })
   }
 
-  try {
-    return Response.json({ trip: await planTrip(prompt) })
-  } catch (err) {
-    return Response.json({ error: err.message }, { status: 500 })
-  }
+  const controller = new AbortController()
+  request.signal?.addEventListener('abort', () => controller.abort(), { once: true })
+
+  return new Response(toSseStream(streamTrip(prompt, { signal: controller.signal })), {
+    status: 200,
+    headers: sseHeaders(),
+  })
 }
