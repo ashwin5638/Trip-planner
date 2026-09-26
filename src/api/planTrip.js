@@ -1,4 +1,4 @@
-export async function planTrip(prompt) {
+const planTrip = async (prompt) => {
   const res = await fetch('/api/plan-trip', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -13,3 +13,6 @@ export async function planTrip(prompt) {
 
   return data.trip
 }
+
+
+export default planTrip
