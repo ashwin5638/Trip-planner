@@ -89,7 +89,11 @@ function readTrip(content) {
 
   const result = tripSchema.safeParse(trip)
   if (!result.success) {
-    throw new Error('The model returned an itinerary in the wrong format. Please try again.')
+    const issues = result.error.issues
+      .slice(0, 3)
+      .map((issue) => `${issue.path.join('.') || 'root'} ${issue.message}`)
+      .join('; ')
+    throw new Error(`The model returned an itinerary in the wrong format (${issues}). Please try again.`)
   }
 
   return result.data
