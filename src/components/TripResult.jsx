@@ -39,28 +39,43 @@ const TripResult = ({ trip, streaming = false }) => {
         )}
       </header>
 
-      {days.map((day) => (
-        <div key={day.day} className="day-panel">
-          <h3 className="day-title">Day {day.day}: {day.title}</h3>
-          <ul className="activity-list">
-            {day.activities.map((activity, index) => (
-              <li key={index} className="activity-card">
-                <span className="ac-time">{activity.time}</span>
-                <div className="ac-body">
-                  <strong className="ac-title">{activity.title}</strong>
-                  {activity.location && <p className="ac-loc">{activity.location}</p>}
-                  {activity.description && (
-                    <p className="ac-desc">{activity.description}</p>
-                  )}
-                </div>
-                <span className={`ac-cost${activity.cost ? '' : ' free'}`}>
-                  {activity.cost ? formatMoney(activity.cost, currency) : 'Free'}
+      {days.map((day) => {
+        const dayTotal = day.activities.reduce((sum, item) => sum + (Number(item.cost) || 0), 0)
+
+        return (
+          <div key={day.day} className="day-panel">
+            <header className="day-head">
+              <h3 className="day-title">
+                <span className="day-num">Day {day.day}</span>
+                {day.title && <span className="day-name">{day.title}</span>}
+              </h3>
+              <p className="day-total">
+                <span className="day-total-label">Day total</span>
+                <span className="day-total-value">
+                  {dayTotal > 0 ? formatMoney(dayTotal, currency) : 'Free'}
                 </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+              </p>
+            </header>
+            <ul className="activity-list">
+              {day.activities.map((activity, index) => (
+                <li key={index} className="activity-card">
+                  <span className="ac-time">{activity.time}</span>
+                  <div className="ac-body">
+                    <strong className="ac-title">{activity.title}</strong>
+                    {activity.location && <p className="ac-loc">{activity.location}</p>}
+                    {activity.description && (
+                      <p className="ac-desc">{activity.description}</p>
+                    )}
+                  </div>
+                  <span className={`ac-cost${activity.cost ? '' : ' free'}`}>
+                    {activity.cost ? formatMoney(activity.cost, currency) : 'Free'}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      })}
 
       {streaming && <PendingDay />}
 

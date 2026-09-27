@@ -1,10 +1,12 @@
 import { z } from 'zod'
 import { DEFAULT_CURRENCY } from './currency.js'
 
-// The `.describe()` strings below are not just documentation: they are compiled
-// into the JSON Schema sent to xAI as `response_format` (see server/llm.js), so
-// they are the model's primary instruction for each field. Keep format rules
-// here rather than duplicating the schema in the system prompt.
+
+
+// This schema is the server's contract: the model is told the shape by the
+// hand-written prompt in lib/llm.js, and the answer is checked against this
+// file. The two must agree. The `.describe()` text documents each field and
+// supplies the wording used in validation errors.
 
 export const activitySchema = z.object({
   time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'must be 24-hour HH:MM').describe(

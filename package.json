@@ -4,16 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently -n server,client -c blue,green \"npm:dev:server\" \"npm:dev:client\"",
-    "dev:server": "node server/index.js",
-    "dev:client": "vite",
+    "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "dotenv": "^18.0.3",
-    "express": "^5.2.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "zod": "^4.6.5"
@@ -23,7 +20,6 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
-    "concurrently": "^10.0.5",
     "eslint": "^10.10.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.6",

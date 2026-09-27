@@ -351,12 +351,65 @@ button {
 }
 
 .day-panel {
-  padding: 8px 22px 20px;
+  padding: 18px 22px;
+}
+
+.day-panel + .day-panel {
+  border-top: 1px solid var(--line);
+}
+
+.day-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
 }
 
 .day-title {
-  margin: 16px 0 12px;
+  margin: 0;
   font-size: 18px;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.day-num {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+  white-space: nowrap;
+}
+
+.day-name {
+  color: var(--text);
+}
+
+.day-total {
+  margin: 0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.day-total-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.day-total-value {
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .activity-list {
@@ -402,19 +455,26 @@ button {
   font-size: 16px;
 }
 
+/* The cost is a right-aligned figure, not a badge: it lines up with the other
+   numbers in the column and stays quiet until the reader wants it. */
 .ac-cost {
   flex-shrink: 0;
-  font-size: 13px;
+  align-self: flex-start;
+  min-width: 64px;
+  text-align: right;
+  font-size: 14px;
   font-weight: 600;
-  padding: 2px 10px;
-  border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--accent-strong);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--text);
 }
 
 .ac-cost.free {
-  background: var(--ok-soft);
-  color: var(--ok);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .ac-loc {
@@ -596,7 +656,30 @@ button {
   .dash-budget {
     text-align: left;
   }
+  .day-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .activity-card {
+    flex-wrap: wrap;
+  }
+  .ac-cost {
+    margin-left: auto;
+  }
   .error-banner {
     flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading {
+    animation: none;
+  }
+  .chip,
+  .trip-form button,
+  .cancel-btn,
+  .reset-btn {
+    transition: none;
   }
 }
